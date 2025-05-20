@@ -1,4 +1,4 @@
-import { Activity, FileText, MessageSquare, User } from "lucide-react"
+import { Activity, FileText, MessageSquare, User, FileSignature, FileCheck, FileSpreadsheet, Users } from "lucide-react"
 
 export function RecentActivity() {
   return (
@@ -10,6 +10,10 @@ export function RecentActivity() {
             {activity.type === "comment" && <MessageSquare className="h-4 w-4" />}
             {activity.type === "ai" && <Activity className="h-4 w-4" />}
             {activity.type === "user" && <User className="h-4 w-4" />}
+            {activity.type === "contract" && <FileSignature className="h-4 w-4" />}
+            {activity.type === "compliance" && <FileCheck className="h-4 w-4" />}
+            {activity.type === "memo" && <FileSpreadsheet className="h-4 w-4" />}
+            {activity.type === "corporate" && <Users className="h-4 w-4" />}
           </div>
           <div className="flex flex-col gap-0.5">
             <p className="text-sm font-medium">{activity.title}</p>
@@ -25,7 +29,7 @@ export function RecentActivity() {
 const activities = [
   {
     type: "edit",
-    title: "Form Updated",
+    title: "10-K Form Updated",
     description: "Acme Corporation 10-K Item 1A updated",
     time: "10 minutes ago",
   },
@@ -36,21 +40,27 @@ const activities = [
     time: "1 hour ago",
   },
   {
+    type: "contract",
+    title: "NDA Created",
+    description: "New NDA created for Umbrella Corp",
+    time: "2 hours ago",
+  },
+  {
     type: "comment",
     title: "New Comment",
     description: "Sarah left a comment on Item 7",
-    time: "2 hours ago",
+    time: "3 hours ago",
+  },
+  {
+    type: "corporate",
+    title: "Bylaws Updated",
+    description: "Wayne Enterprises corporate bylaws updated",
+    time: "4 hours ago",
   },
   {
     type: "user",
     title: "User Action",
     description: "John approved Item 1 Business section",
-    time: "3 hours ago",
-  },
-  {
-    type: "edit",
-    title: "Form Created",
-    description: "New 10-K filing created for Globex Industries",
     time: "Yesterday at 4:30 PM",
   },
 ]

@@ -9,8 +9,11 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "10-K AI Filing System",
-  description: "Automate SEC 10-K filings using AI",
+  title: "SRFCB AI | Legal Document Automation",
+  description: "AI-Powered Legal Document Automation",
+  icons: {
+    icon: "/favicon.ico",
+  },
     generator: 'v0.dev'
 }
 
