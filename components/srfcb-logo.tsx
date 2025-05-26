@@ -34,3 +34,5 @@ export function SRFCBLogo({ size = "md", variant = "full" }: SRFCBLogoProps) {
     </div>
   )
 }
+
+export { SRFCBLogo as SrfcbLogo }

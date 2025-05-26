@@ -1,19 +1,20 @@
 "use client"
 
-import { usePathname } from "next/navigation"
-import Link from "next/link"
 import {
-  BarChart3,
-  Building2,
+  Calendar,
+  ChevronUp,
   FileText,
+  Home,
+  Inbox,
+  Search,
   Settings,
-  ChevronDown,
   User2,
-  FileCheck,
-  FileSpreadsheet,
-  FileSignature,
-  Users,
+  Building2,
+  BarChart3,
+  Shield,
+  LogOut,
 } from "lucide-react"
+import { useUser, useClerk } from "@clerk/nextjs"
 
 import {
   Sidebar,
@@ -26,307 +27,131 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { DocumentTypeSelector } from "@/components/document-type-selector"
-import { SRFCBLogo } from "@/components/srfcb-logo"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { useState } from "react"
+import { SrfcbLogo } from "@/components/srfcb-logo"
+
+// Menu items.
+const items = [
+  {
+    title: "Dashboard",
+    url: "/",
+    icon: Home,
+  },
+  {
+    title: "Documents",
+    url: "/documents",
+    icon: FileText,
+  },
+  {
+    title: "Companies",
+    url: "/companies",
+    icon: Building2,
+  },
+  {
+    title: "Forms",
+    url: "/forms",
+    icon: Inbox,
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: BarChart3,
+  },
+  {
+    title: "Search",
+    url: "/search",
+    icon: Search,
+  },
+  {
+    title: "Calendar",
+    url: "/calendar",
+    icon: Calendar,
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Settings,
+  },
+]
 
 export function AppSidebar() {
-  const pathname = usePathname()
-  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({
-    secFilings: true,
-    contracts: false,
-    compliance: false,
-    legal: false,
-    corporate: false,
-  })
-
-  const toggleCategory = (category: string) => {
-    setOpenCategories((prev) => ({
-      ...prev,
-      [category]: !prev[category],
-    }))
-  }
+  const { user } = useUser()
+  const { signOut } = useClerk()
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon">
-      <SidebarHeader className="border-b border-navy-700/20">
-        <div className="flex items-center gap-2 px-2 py-4">
-          <SRFCBLogo />
+    <Sidebar>
+      <SidebarHeader className="border-b border-sidebar-border">
+        <div className="flex items-center gap-2 px-4 py-2">
+          <SrfcbLogo className="h-8 w-auto" />
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold">SRFCB AI</span>
+            <span className="text-xs text-muted-foreground">Legal Document Automation</span>
+          </div>
         </div>
-        <DocumentTypeSelector />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Dashboard">
-                  <Link href="/">
-                    <BarChart3 />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/companies"} tooltip="Companies">
-                  <Link href="/companies">
-                    <Building2 />
-                    <span>Companies</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Document Types</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {/* SEC Filings */}
-              <SidebarMenuItem>
-                <Collapsible open={openCategories.secFilings} onOpenChange={() => toggleCategory("secFilings")}>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip="SEC Filings">
-                      <FileText />
-                      <span>SEC Filings</span>
-                      <ChevronDown
-                        className={`ml-auto h-4 w-4 transition-transform ${openCategories.secFilings ? "rotate-180" : ""}`}
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-8 space-y-1 pt-1">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/10-k"}
-                      className="h-8"
-                      tooltip="10-K Annual Reports"
-                    >
-                      <Link href="/documents/10-k">
-                        <span className="text-sm">10-K Annual Reports</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/10-q"}
-                      className="h-8"
-                      tooltip="10-Q Quarterly Reports"
-                    >
-                      <Link href="/documents/10-q">
-                        <span className="text-sm">10-Q Quarterly Reports</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/8-k"}
-                      className="h-8"
-                      tooltip="8-K Current Reports"
-                    >
-                      <Link href="/documents/8-k">
-                        <span className="text-sm">8-K Current Reports</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </CollapsibleContent>
-                </Collapsible>
-              </SidebarMenuItem>
-
-              {/* Contracts */}
-              <SidebarMenuItem>
-                <Collapsible open={openCategories.contracts} onOpenChange={() => toggleCategory("contracts")}>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip="Contracts">
-                      <FileSignature />
-                      <span>Contracts</span>
-                      <ChevronDown
-                        className={`ml-auto h-4 w-4 transition-transform ${openCategories.contracts ? "rotate-180" : ""}`}
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-8 space-y-1 pt-1">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/contracts/nda"}
-                      className="h-8"
-                      tooltip="NDAs"
-                    >
-                      <Link href="/documents/contracts/nda">
-                        <span className="text-sm">NDAs</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/contracts/employment"}
-                      className="h-8"
-                      tooltip="Employment"
-                    >
-                      <Link href="/documents/contracts/employment">
-                        <span className="text-sm">Employment</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </CollapsibleContent>
-                </Collapsible>
-              </SidebarMenuItem>
-
-              {/* Compliance Documents */}
-              <SidebarMenuItem>
-                <Collapsible open={openCategories.compliance} onOpenChange={() => toggleCategory("compliance")}>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip="Compliance">
-                      <FileCheck />
-                      <span>Compliance</span>
-                      <ChevronDown
-                        className={`ml-auto h-4 w-4 transition-transform ${openCategories.compliance ? "rotate-180" : ""}`}
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-8 space-y-1 pt-1">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/compliance/policies"}
-                      className="h-8"
-                      tooltip="Policies"
-                    >
-                      <Link href="/documents/compliance/policies">
-                        <span className="text-sm">Policies</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/compliance/procedures"}
-                      className="h-8"
-                      tooltip="Procedures"
-                    >
-                      <Link href="/documents/compliance/procedures">
-                        <span className="text-sm">Procedures</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </CollapsibleContent>
-                </Collapsible>
-              </SidebarMenuItem>
-
-              {/* Legal Memoranda */}
-              <SidebarMenuItem>
-                <Collapsible open={openCategories.legal} onOpenChange={() => toggleCategory("legal")}>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip="Legal Memoranda">
-                      <FileSpreadsheet />
-                      <span>Legal Memoranda</span>
-                      <ChevronDown
-                        className={`ml-auto h-4 w-4 transition-transform ${openCategories.legal ? "rotate-180" : ""}`}
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-8 space-y-1 pt-1">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/legal/internal"}
-                      className="h-8"
-                      tooltip="Internal Memos"
-                    >
-                      <Link href="/documents/legal/internal">
-                        <span className="text-sm">Internal Memos</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/legal/client"}
-                      className="h-8"
-                      tooltip="Client Memos"
-                    >
-                      <Link href="/documents/legal/client">
-                        <span className="text-sm">Client Memos</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </CollapsibleContent>
-                </Collapsible>
-              </SidebarMenuItem>
-
-              {/* Corporate Governance */}
-              <SidebarMenuItem>
-                <Collapsible open={openCategories.corporate} onOpenChange={() => toggleCategory("corporate")}>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip="Corporate Governance">
-                      <Users />
-                      <span>Corporate Governance</span>
-                      <ChevronDown
-                        className={`ml-auto h-4 w-4 transition-transform ${openCategories.corporate ? "rotate-180" : ""}`}
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-8 space-y-1 pt-1">
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/corporate/bylaws"}
-                      className="h-8"
-                      tooltip="Bylaws"
-                    >
-                      <Link href="/documents/corporate/bylaws">
-                        <span className="text-sm">Bylaws</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/documents/corporate/minutes"}
-                      className="h-8"
-                      tooltip="Board Minutes"
-                    >
-                      <Link href="/documents/corporate/minutes">
-                        <span className="text-sm">Board Minutes</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </CollapsibleContent>
-                </Collapsible>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Settings</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/settings"} tooltip="Settings">
-                  <Link href="/settings">
-                    <Settings />
-                    <span>Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-navy-700/20">
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src="/abstract-geometric-shapes.png" alt="User" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <span>John Doe</span>
-                  <ChevronDown className="ml-auto h-4 w-4" />
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <User2 className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
+                      {user?.fullName || user?.emailAddresses[0]?.emailAddress || "User"}
+                    </span>
+                    <span className="truncate text-xs">
+                      {user?.emailAddresses[0]?.emailAddress || "user@example.com"}
+                    </span>
+                  </div>
+                  <ChevronUp className="ml-auto size-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuContent
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                side="bottom"
+                align="end"
+                sideOffset={4}
+              >
                 <DropdownMenuItem>
                   <User2 className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <span>Account</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
+                  <Shield className="mr-2 h-4 w-4" />
+                  <span>Security</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -334,7 +159,6 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-      <SidebarTrigger className="absolute right-4 top-4 md:hidden" />
     </Sidebar>
   )
 }

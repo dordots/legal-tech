@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation"
+import { currentUser } from "@clerk/nextjs/server"
 import type { Metadata } from "next"
 import { AlertCircle, CheckCircle2, FileText, RefreshCw } from "lucide-react"
 
@@ -16,7 +18,13 @@ export const metadata: Metadata = {
   description: "AI-Powered Legal Document Automation",
 }
 
-export default function DashboardPage() {
+export default async function HomePage() {
+  const user = await currentUser()
+
+  if (!user) {
+    redirect("/sign-in")
+  }
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <DashboardHeader />
