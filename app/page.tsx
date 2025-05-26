@@ -126,7 +126,8 @@ export default async function HomePage() {
               <CardContent>
                 <div className="h-[300px] flex items-center justify-center border rounded-md">
                   <p className="text-muted-foreground">Reports dashboard coming soon</p>
-                </CardContent>
+                </div>
+              </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
