@@ -3,6 +3,17 @@
 import { useAuth } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import { AuthenticatedLayout } from "@/components/authenticated-layout"
+import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { StatCard } from "@/components/dashboard/stat-card"
+import { RecentDocuments } from "@/components/dashboard/recent-documents"
+import { QuickStartTemplates } from "@/components/dashboard/quick-start-templates"
+import { DocumentTypeDistribution } from "@/components/dashboard/document-type-distribution"
+import { RecentActivity } from "@/components/dashboard/recent-activity"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, CheckCircle2, FileText, RefreshCw } from "lucide-react"
 
 export default function HomePage() {
   const { isLoaded, isSignedIn } = useAuth()
@@ -17,7 +28,7 @@ export default function HomePage() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     )
   }
@@ -27,95 +38,116 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <h1 className="text-3xl font-bold text-gray-900">SRFCB AI Dashboard</h1>
-          <p className="mt-2 text-gray-600">Welcome to your legal document automation platform</p>
-
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-blue-500 rounded-full"></div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Total Documents</dt>
-                      <dd className="text-lg font-medium text-gray-900">2,350</dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+    <AuthenticatedLayout>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <DashboardHeader />
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <StatCard
+                title="Total Documents"
+                value="24"
+                description="Across all document types"
+                icon={<FileText className="h-4 w-4 text-muted-foreground" />}
+              />
+              <StatCard
+                title="Completed"
+                value="12"
+                description="Ready for submission or use"
+                icon={<CheckCircle2 className="h-4 w-4 text-green-500" />}
+              />
+              <StatCard
+                title="In Progress"
+                value="8"
+                description="Being actively edited"
+                icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
+              />
+              <StatCard
+                title="Needs Attention"
+                value="4"
+                description="Requires review"
+                icon={<AlertCircle className="h-4 w-4 text-amber-500" />}
+              />
             </div>
-
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-green-500 rounded-full"></div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Active Users</dt>
-                      <dd className="text-lg font-medium text-gray-900">145</dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>Recent Documents</CardTitle>
+                  <CardDescription>Your most recently edited documents</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RecentDocuments />
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" className="w-full" asChild>
+                    <a href="/documents">View All Documents</a>
+                  </Button>
+                </CardFooter>
+              </Card>
+              <Card className="col-span-3">
+                <CardHeader>
+                  <CardTitle>Recent Activity</CardTitle>
+                  <CardDescription>Latest actions and updates</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RecentActivity />
+                </CardContent>
+              </Card>
             </div>
-
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-yellow-500 rounded-full"></div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Companies</dt>
-                      <dd className="text-lg font-medium text-gray-900">89</dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <Card className="col-span-3">
+                <CardHeader>
+                  <CardTitle>Document Distribution</CardTitle>
+                  <CardDescription>Documents by type</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DocumentTypeDistribution />
+                </CardContent>
+              </Card>
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>Quick Start</CardTitle>
+                  <CardDescription>Create new documents from templates</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <QuickStartTemplates />
+                </CardContent>
+              </Card>
             </div>
-
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-purple-500 rounded-full"></div>
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Completion Rate</dt>
-                      <dd className="text-lg font-medium text-gray-900">94.2%</dd>
-                    </dl>
-                  </div>
+          </TabsContent>
+          <TabsContent value="analytics" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Analytics</CardTitle>
+                <CardDescription>View detailed analytics for your documents</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] flex items-center justify-center border rounded-md">
+                  <p className="text-muted-foreground">Analytics dashboard coming soon</p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Quick Actions</h3>
-              <div className="mt-5">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
-                    Create New Document
-                  </button>
-                  <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                    View All Documents
-                  </button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="reports" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Reports</CardTitle>
+                <CardDescription>Generate and view reports</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] flex items-center justify-center border rounded-md">
+                  <p className="text-muted-foreground">Reports dashboard coming soon</p>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-    </div>
+    </AuthenticatedLayout>
   )
 }
