@@ -1,44 +1,25 @@
-"use client"
-
-import { useAuth } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { AuthenticatedLayout } from "@/components/authenticated-layout"
-import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { StatCard } from "@/components/dashboard/stat-card"
-import { RecentDocuments } from "@/components/dashboard/recent-documents"
-import { QuickStartTemplates } from "@/components/dashboard/quick-start-templates"
-import { DocumentTypeDistribution } from "@/components/dashboard/document-type-distribution"
-import { RecentActivity } from "@/components/dashboard/recent-activity"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
+import type { Metadata } from "next"
 import { AlertCircle, CheckCircle2, FileText, RefreshCw } from "lucide-react"
 
-export default function HomePage() {
-  const { isLoaded, isSignedIn } = useAuth()
-  const router = useRouter()
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { RecentActivity } from "@/components/dashboard/recent-activity"
+import { StatCard } from "@/components/dashboard/stat-card"
+import { DocumentTypeDistribution } from "@/components/dashboard/document-type-distribution"
+import { RecentDocuments } from "@/components/dashboard/recent-documents"
+import { QuickStartTemplates } from "@/components/dashboard/quick-start-templates"
+import { AuthWrapper } from "@/components/auth-wrapper"
 
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in")
-    }
-  }, [isLoaded, isSignedIn, router])
+export const metadata: Metadata = {
+  title: "Dashboard | SRFCB AI",
+  description: "AI-Powered Legal Document Automation",
+}
 
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
-
-  if (!isSignedIn) {
-    return null
-  }
-
+export default function DashboardPage() {
   return (
-    <AuthenticatedLayout>
+    <AuthWrapper>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <DashboardHeader />
         <Tabs defaultValue="overview" className="space-y-4">
@@ -148,6 +129,6 @@ export default function HomePage() {
           </TabsContent>
         </Tabs>
       </div>
-    </AuthenticatedLayout>
+    </AuthWrapper>
   )
 }

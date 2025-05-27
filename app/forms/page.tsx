@@ -1,36 +1,15 @@
-"use client"
-
-import { useAuth } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { AuthenticatedLayout } from "@/components/authenticated-layout"
+import { AuthWrapper } from "@/components/auth-wrapper"
 import { FormsList } from "@/components/forms/forms-list"
 
 export default function FormsPage() {
-  const { isLoaded, isSignedIn } = useAuth()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in")
-    }
-  }, [isLoaded, isSignedIn, router])
-
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
-
-  if (!isSignedIn) {
-    return null
-  }
-
   return (
-    <AuthenticatedLayout>
-      <FormsList />
-    </AuthenticatedLayout>
+    <AuthWrapper>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">Forms</h2>
+        </div>
+        <FormsList />
+      </div>
+    </AuthWrapper>
   )
 }

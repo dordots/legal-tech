@@ -1,41 +1,15 @@
-"use client"
-
-import { useAuth } from "@clerk/nextjs"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { AuthWrapper } from "@/components/auth-wrapper"
+import { CompanyList } from "@/components/companies/company-list"
 
 export default function CompaniesPage() {
-  const { isLoaded, isSignedIn } = useAuth()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in")
-    }
-  }, [isLoaded, isSignedIn, router])
-
-  if (!isLoaded) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-  }
-
-  if (!isSignedIn) {
-    return null
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <h1 className="text-3xl font-bold text-gray-900">Companies</h1>
-          <p className="mt-2 text-gray-600">Manage your companies and their filing information</p>
-
-          <div className="mt-8 bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <p className="text-gray-500">Companies management coming soon...</p>
-            </div>
-          </div>
+    <AuthWrapper>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">Companies</h2>
         </div>
+        <CompanyList />
       </div>
-    </div>
+    </AuthWrapper>
   )
 }
