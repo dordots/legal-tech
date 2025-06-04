@@ -1,6 +1,6 @@
 "use client"
 
-import { FileText, FileSignature, FileCheck, ArrowRight } from "lucide-react"
+import { FileText, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { DocumentCreationWizard } from "@/components/document-creation-wizard"
@@ -20,20 +20,6 @@ const templates = [
     description: "Create a new 10-Q quarterly report for SEC filing",
     icon: FileText,
     color: "bg-blue-100 text-blue-800",
-  },
-  {
-    id: "nda",
-    title: "Non-Disclosure Agreement",
-    description: "Create a new NDA for protecting confidential information",
-    icon: FileSignature,
-    color: "bg-emerald-100 text-emerald-800",
-  },
-  {
-    id: "policy",
-    title: "Company Policy",
-    description: "Create a new company policy document",
-    icon: FileCheck,
-    color: "bg-amber-100 text-amber-800",
   },
 ]
 
