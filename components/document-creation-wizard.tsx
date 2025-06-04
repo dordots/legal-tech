@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { FileText, FileSignature, FileCheck, FileSpreadsheet, Users, Check, ChevronsUpDown, Star } from "lucide-react"
+import { FileText, Check, ChevronsUpDown, Star } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -47,41 +47,6 @@ const documentTypes = [
     description: "Report of unscheduled material events or corporate changes",
     category: "SEC Filings",
     icon: FileText,
-  },
-  {
-    id: "nda",
-    name: "Non-Disclosure Agreement",
-    description: "Legal contract to protect confidential information",
-    category: "Contracts",
-    icon: FileSignature,
-  },
-  {
-    id: "employment",
-    name: "Employment Contract",
-    description: "Agreement between employer and employee",
-    category: "Contracts",
-    icon: FileSignature,
-  },
-  {
-    id: "policy",
-    name: "Company Policy",
-    description: "Internal company policies and procedures",
-    category: "Compliance",
-    icon: FileCheck,
-  },
-  {
-    id: "memo",
-    name: "Legal Memorandum",
-    description: "Internal legal analysis document",
-    category: "Legal Memoranda",
-    icon: FileSpreadsheet,
-  },
-  {
-    id: "bylaws",
-    name: "Corporate Bylaws",
-    description: "Rules governing a corporation's operations",
-    category: "Corporate Governance",
-    icon: Users,
   },
 ]
 
@@ -192,11 +157,9 @@ export function DocumentCreationWizard({ children }: DocumentCreationWizardProps
         {step === 1 && (
           <div className="grid gap-4 py-4">
             <Tabs defaultValue="featured" value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid grid-cols-4 mb-4">
+              <TabsList className="grid grid-cols-2 mb-4">
                 <TabsTrigger value="featured">Featured</TabsTrigger>
                 <TabsTrigger value="sec">SEC Filings</TabsTrigger>
-                <TabsTrigger value="contracts">Contracts</TabsTrigger>
-                <TabsTrigger value="other">Other</TabsTrigger>
               </TabsList>
 
               <TabsContent value="featured" className="space-y-4">
@@ -268,67 +231,6 @@ export function DocumentCreationWizard({ children }: DocumentCreationWizardProps
                 </div>
               </TabsContent>
 
-              <TabsContent value="contracts" className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {documentTypes
-                    .filter((doc) => doc.category === "Contracts")
-                    .map((docType) => (
-                      <Card
-                        key={docType.id}
-                        className={cn(
-                          "cursor-pointer transition-all hover:border-navy-500",
-                          formData.documentType === docType.id
-                            ? "border-2 border-navy-500 shadow-sm"
-                            : "border border-border",
-                        )}
-                        onClick={() => handleDocumentTypeSelect(docType.id)}
-                      >
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="rounded-full bg-navy-100 p-1.5">
-                              <docType.icon className="h-4 w-4 text-navy-800" />
-                            </div>
-                            <CardTitle className="text-sm font-medium">{docType.name}</CardTitle>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs text-muted-foreground">{docType.description}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="other" className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {documentTypes
-                    .filter((doc) => !["SEC Filings", "Contracts"].includes(doc.category))
-                    .map((docType) => (
-                      <Card
-                        key={docType.id}
-                        className={cn(
-                          "cursor-pointer transition-all hover:border-navy-500",
-                          formData.documentType === docType.id
-                            ? "border-2 border-navy-500 shadow-sm"
-                            : "border border-border",
-                        )}
-                        onClick={() => handleDocumentTypeSelect(docType.id)}
-                      >
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                          <div className="flex items-center space-x-2">
-                            <div className="rounded-full bg-navy-100 p-1.5">
-                              <docType.icon className="h-4 w-4 text-navy-800" />
-                            </div>
-                            <CardTitle className="text-sm font-medium">{docType.name}</CardTitle>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-xs text-muted-foreground">{docType.description}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-              </TabsContent>
             </Tabs>
 
             {selectedDocType && (
