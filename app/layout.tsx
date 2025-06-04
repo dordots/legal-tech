@@ -4,8 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ClerkProvider } from "@clerk/nextjs"
 import { ThemeProvider } from "@/components/theme-provider"
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { AppLayout } from "@/components/app-layout"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,12 +27,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-            <SidebarProvider>
-              <div className="flex min-h-screen">
-                <AppSidebar />
-                <div className="flex-1">{children}</div>
-              </div>
-            </SidebarProvider>
+            <AppLayout>{children}</AppLayout>
           </ThemeProvider>
         </body>
       </html>

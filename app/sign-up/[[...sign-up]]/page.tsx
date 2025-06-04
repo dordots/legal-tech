@@ -37,7 +37,7 @@ export default function SignUpPage() {
                     footerActionLink: "text-slate-600 hover:text-slate-900",
                   },
                 }}
-                redirectUrl="/dashboard"
+                redirectUrl="/"
                 signInUrl="/sign-in"
               />
             </div>
